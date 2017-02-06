@@ -1,0 +1,10 @@
+diff --git a/src/main.py b/src/main.py
+index 0f6afea..f1fba24 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -1,3 +1,5 @@
++#!/usr/bin/env python
++
+ # because the warnings says so…
+ import gi
+ gi.require_version('Gtk', '3.0')
