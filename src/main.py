@@ -14,17 +14,16 @@ class XautolockApplet:
 
     APPINDICATOR_ID = 'xautolock-toggle'
 
-    ON_LABEL = 'Disable'
-    OFF_LABEL = 'Enable'
+    ON_LABEL = 'Disable xautolock'
+    OFF_LABEL = 'Enable xautolock'
 
     def __init__(self):
         self.is_xautolock_enabled = True
         self.enable_xautolock() # ensure xautolock is enabled so the applet state is synch'ed with xautolock
 
-        self.indicator = appindicator.Indicator.new(XautolockApplet.APPINDICATOR_ID, 'xautolock_toggle', appindicator.IndicatorCategory.SYSTEM_SERVICES)
+        self.indicator = appindicator.Indicator.new(XautolockApplet.APPINDICATOR_ID, gtk.STOCK_YES, appindicator.IndicatorCategory.SYSTEM_SERVICES)
         self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
         self.render_menu()
-        glib.timeout_add(100, self.render_menu) # refresh the menu every 100ms, let's assume the user won't click on state change then applet icon in less than 100ms
 
     def enable_xautolock(self):
         os.system('xautolock -enable')
@@ -36,7 +35,6 @@ class XautolockApplet:
         menu = self.build_menu()
         menu.show_all()
         self.indicator.set_menu(menu)
-        return True # return true to ensure the timeout keep refreshing
 
     def build_menu(self):
         menu = gtk.Menu()
@@ -46,15 +44,21 @@ class XautolockApplet:
 
     def build_toggle_menu_item(self):
         menu_item = gtk.MenuItem(self.get_state_label())
-        menu_item.connect('activate', lambda _: self.toggle_state()) # use a lambda to explicitely ignore the callback parameter
+        menu_item.connect('activate', self.toggle_state) # use a lambda to explicitely ignore the callback parameter
         return menu_item
 
     def get_state_label(self):
         return XautolockApplet.ON_LABEL if self.is_xautolock_enabled else XautolockApplet.OFF_LABEL
 
-    def toggle_state(self):
+    def toggle_state(self, source):
         self.is_xautolock_enabled = not self.is_xautolock_enabled
-        self.enable_xautolock() if self.is_xautolock_enabled else self.disable_xautolock()
+        source.set_label(self.get_state_label())
+        if self.is_xautolock_enabled:
+            self.enable_xautolock()
+            self.indicator.set_icon(gtk.STOCK_YES)
+        else:
+            self.disable_xautolock()
+            self.indicator.set_icon(gtk.STOCK_NO)
 
     def build_quit_menu_item(self):
         menu_item = gtk.MenuItem('Quit')
