@@ -27,9 +27,11 @@ class XautolockApplet:
 
     def enable_xautolock(self):
         os.system('xautolock -enable')
+        os.system('xset +dpms')
 
     def disable_xautolock(self):
         os.system('xautolock -disable')
+        os.system('xset -dpms')
 
     def render_menu(self):
         menu = self.build_menu()
