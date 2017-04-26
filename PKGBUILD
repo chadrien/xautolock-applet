@@ -1,7 +1,7 @@
 # Maintainer: Hadrien de Cuzey <hadrien@decuzey.fr>
 _gitname=xautolock-applet
 pkgname=xautolock-applet-git
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="applet do enable/disable xautolock"
 arch=('i686' 'x86_64')
